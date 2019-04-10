@@ -203,7 +203,6 @@ _.each = function(collection, fn) {
 * Extra Credit:
 *   use _.each in your implementation
 */
-
 _.filter = function(array, fn) {
     const arr = [];
   _.each(array, function(elt, index, collection) {
@@ -245,7 +244,6 @@ _.map = function (collection, fn) {
     }
     return arr;
 };
-
 
 /** _.reject
 * Arguments:
@@ -289,7 +287,19 @@ _.reject = function(array, fn) {
 }
 */
 _.partition = function (array, fn) {
-    
+    let arr = [];
+    let truthy = [];
+    let falsy = [];
+    for (let i = 0; i < array.length; i++) {
+        if(fn(array[i]) === true) {
+            truthy.push(array[i]);
+        }
+        else {
+            falsy.push(array[i]);
+        }
+    }
+    arr.push(truthy, falsy);
+    return arr;
 };
 
 
@@ -313,20 +323,22 @@ _.partition = function (array, fn) {
 *   _.every([2,4,6], function(e){return e % 2 === 0}) -> true
 *   _.every([1,2,3], function(e){return e % 2 === 0}) -> false
 */
-_.every = function(collection, test) {
-    
+_.every = function(collection, func) {
     var allTrue = true;
-    
+    if (!func) {
+        _.each(collection, function(value, loc, collection) {
+         if (!value) {
+             allTrue = false;
+         }   
+        });
+        return allTrue;
+    }
     _.each(collection, function(value, loc, collection) {
-        
-         if (!test(value, loc, collection)) {
+         if (!func(value, loc, collection)) {
               allTrue = false;
           }
-          
     });
-    
     return allTrue;
-
 };
 
 /** _.some
@@ -351,7 +363,14 @@ _.every = function(collection, test) {
 */
 _.some = function (collection, fn) {
     var allTrue = false;
-    
+    if (!fn) {
+        _.each(collection, function(value, loc, collection) {
+         if (value) {
+             allTrue = true;
+         }   
+        });
+        return allTrue;
+    }
     _.each(collection, function(value, loc, collection) {
         
          if (fn(value, loc, collection)) {
@@ -373,8 +392,11 @@ _.some = function (collection, fn) {
 * Examples:
 *   _.pluck([{a: "one"}, {a: "two"}], "a") -> ["one", "two"]
 */
-_.pluck = function(array, ) {
-    
+_.pluck = function(array, property) {
+    let arr = _.map(array, function(elt, i, array) {
+        return elt[property];
+    });
+    return arr;
 };
 
 //////////////////////////////////////////////////////////////////////
